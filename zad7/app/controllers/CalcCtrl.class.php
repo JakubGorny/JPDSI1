@@ -14,25 +14,22 @@ class CalcCtrl {
 	private $msgs;   //wiadomości dla widoku
 	private $form;   //dane formularza (do obliczeń i dla widoku)
 	private $result; //inne dane dla widoku
-	private $hide_intro; //zmienna informująca o tym czy schować intro
 
 	/** 
 	 * Konstruktor - inicjalizacja właściwości
 	 */
 	public function __construct(){
 		//stworzenie potrzebnych obiektów
-		$this->msgs = new Messages();
 		$this->form = new CalcForm();
 		$this->result = new CalcResult();
-		$this->hide_intro = false;
 	}
 	
 	/** 
 	 * Pobranie parametrów
 	 */
 	public function getParams(){
-		$this->form->waga = isset($_REQUEST ['waga']) ? $_REQUEST ['waga'] : null;
-		$this->form->wzrost = isset($_REQUEST ['wzrost']) ? $_REQUEST ['wzrost'] : null;
+		$this->form->waga = getFromRequest('waga');
+		$this->form->wzrost = getFromRequest('wzrost');
 	}
 	
 	
@@ -74,7 +71,7 @@ class CalcCtrl {
 	 */
 	public function process(){
 
-		$this->getparams();
+		$this->getParams();
 		
 		if ($this->validate()) {
 				
@@ -97,22 +94,15 @@ class CalcCtrl {
 	/**
 	 * Wygenerowanie widoku
 	 */
-	public function generateView(){
-		global $conf;
-		
-		$smarty = new Smarty();
-		$smarty->assign('conf',$conf);
-		
-		$smarty->assign('page_title','Kalkulator BMI');
-        $smarty->assign('page_description','Obiektowa wersja z szablonowaniem Smarty');
-        $smarty->assign('page_header','Obiektowosc');
+public function generateView(){
+
+		getSmarty()->assign('user',unserialize($_SESSION['user']));
 				
-		$smarty->assign('hide_intro',$this->hide_intro);
+		getSmarty()->assign('page_title','Super kalkulator - role');
+
+		getSmarty()->assign('form',$this->form);
+		getSmarty()->assign('res',$this->result);
 		
-		$smarty->assign('msgs',$this->msgs);
-		$smarty->assign('form',$this->form);
-		$smarty->assign('res',$this->result);
-		
-		$smarty->display($conf->root_path.'/app/CalcView.html');
+		getSmarty()->display('CalcView.tpl');
 	}
 }

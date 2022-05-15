@@ -6,25 +6,16 @@ require_once 'init.php';
 
 //utwórz obiekt i użyj
 //załaduj kontroler
-switch ($action) {
+getConf()->login_action = 'login';
 
-    case 'login': // akcja PUBLICZNA - brak check.php
-        $ctrl = new app\controllers\LoginCtrl();
-        $ctrl->doLogin();
-    break;
-    case 'calculate' : // akcja NIEPUBLICZNA
-		include 'check.php';  // KONTROLA
-		$ctrl = new app\controllers\CalcCtrl();
-		$ctrl->process ();
-	break;
-    case 'logout' : // akcja NIEPUBLICZNA
-		include 'check.php';  // KONTROLA
-		$ctrl = new app\controllers\LoginCtrl();
-		$ctrl->doLogout();
-	break;
-    default:
-       include 'check.php'; // KONTROLA
-		$ctrl = new app\controllers\CalcCtrl();
-		$ctrl->generateView ();
-        break;
+switch ($action) {
+	default :
+		control('app\\controllers', 'CalcCtrl',		'generateView', ['user','admin']);
+	case 'login': 
+		control('app\\controllers', 'LoginCtrl',	'doLogin');
+	case 'calculate' : 
+		//zamiast pierwszego parametru można podać null lub '' wtedy zostanie przyjęta domyślna przestrzeń nazw dla kontrolerów
+		control(null, 'CalcCtrl',	'process',		['user','admin']);
+	case 'logout' : 
+		control(null, 'LoginCtrl',	'doLogout',		['user','admin']);
 }
