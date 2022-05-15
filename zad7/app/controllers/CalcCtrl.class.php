@@ -90,7 +90,10 @@ class CalcCtrl {
 		$this->generateView();
 	}
 	
-	
+	public function action_calcShow(){
+		getMessages()->addInfo('Witaj w kalkulatorze');
+		$this->generateView();
+	}
 	/**
 	 * Wygenerowanie widoku
 	 */

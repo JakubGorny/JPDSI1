@@ -1,21 +1,20 @@
 <?php
 require_once 'init.php';
-//Skrypt uruchamiający akcję wykonania obliczeń kalkulatora
-// - należy zwrócić uwagę jak znacząco jego rola uległa zmianie
-//   po wstawieniu funkcjonalności do klasy kontrolera
+// Rozszerzenia:
+// Dodanie klasy Router oraz Route, które realizują idee przedstawione poprzednio, ale na wyższym poziomie i obiektowo.
+// Po pierwsze rezygnujemy ze struktury 'switch' w kontrolerze głównym i zastępujemy ją tablicą ścieżek przechowywaną
+// wewnątrz obiektu routera. Router powstaje w skrypcie init.php i jak inne ważne obekty jest dostępny przez getRouter().
 
-//utwórz obiekt i użyj
-//załaduj kontroler
-getConf()->login_action = 'login';
+// Odpowiednio nazwane metody routera realizują wszystkie zadania iplementowane uprzednio w funkcji control oraz strukturze 'switch'.
 
-switch ($action) {
-	default :
-		control('app\\controllers', 'CalcCtrl',		'generateView', ['user','admin']);
-	case 'login': 
-		control('app\\controllers', 'LoginCtrl',	'doLogin');
-	case 'calculate' : 
-		//zamiast pierwszego parametru można podać null lub '' wtedy zostanie przyjęta domyślna przestrzeń nazw dla kontrolerów
-		control(null, 'CalcCtrl',	'process',		['user','admin']);
-	case 'logout' : 
-		control(null, 'LoginCtrl',	'doLogout',		['user','admin']);
-}
+// Oczywiście tym samym znika funkcja 'control' - jest ona prywatną metodą routera.
+
+getRouter()->setDefaultRoute('calcShow'); // akcja/ścieżka domyślna
+getRouter()->setLoginRoute('login'); // akcja/ścieżka na potrzeby logowania (przekierowanie, gdy nie ma dostępu)
+
+
+getRouter()->addRoute('calculate', 'CalcCtrl',  ['user','admin']);
+getRouter()->addRoute('login',       'LoginCtrl');
+getRouter()->addRoute('logout',      'LoginCtrl', ['user','admin']);
+
+getRouter()->go(); //wybiera i uruchamia odpowiednią ścieżkę na podstawie parametru 'action';

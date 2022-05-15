@@ -1,5 +1,5 @@
-<?php
-namespace core;
+<?php namespace core;
+
 class Config{
 	public $root_path;
 	public $server_name;
@@ -8,4 +8,7 @@ class Config{
 	public $app_url; 
 	public $action_root;
 	public $action_url;
+
+	public $login_action;
+	public $roles;
 }
