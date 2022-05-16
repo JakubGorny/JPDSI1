@@ -9,7 +9,7 @@ require_once 'init.php';
 
 // Oczywiście tym samym znika funkcja 'control' - jest ona prywatną metodą routera.
 
-getRouter()->setDefaultRoute('calcShow'); // akcja/ścieżka domyślna
+getRouter()->setDefaultRoute('personList'); // akcja/ścieżka domyślna
 getRouter()->setLoginRoute('login'); // akcja/ścieżka na potrzeby logowania (przekierowanie, gdy nie ma dostępu)
 
 getRouter()->addRoute('calcShow',    'CalcCtrl',  ['user','admin']);
